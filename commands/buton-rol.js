@@ -7,10 +7,10 @@ exports.run = async (client, message, args) => {
   let rol = message.mentions.roles.first()
  
   if(!rol) return message.channel.send("Lütfen bir rol etiketle!")
-  let emoji = args[1]
-  if (!emoji) return message.channel.send("Lütfen bir emoji gir!")
-  let mesaj = args.slice(2).join(" ")
+ 
+  let mesaj = args.slice(1).join(" ")
   if (!mesaj) return message.channel.send("Lütfen bir embed mesaj yazısı gir!")
+  let buttonid = rol.name
   const embed = new EmbedBuilder()
   .setTitle("Godzilla - Rol Al Sistemi!")
   .setDescription(`${mesaj}`)
@@ -18,13 +18,14 @@ exports.run = async (client, message, args) => {
   const row = new Discord.ActionRowBuilder()
   .addComponents(
   new Discord.ButtonBuilder()
-  .setLabel(`${emoji} `+ rol.name)
+  .setLabel(rol.name)
   .setStyle(Discord.ButtonStyle.Secondary)
   .setCustomId("rol")
   )
-  message.channel.send({embeds: [embed], components: [row]})
-db.set(`buton_rol${message.guild.id}`, rol.id)
-};
+  message.channel.send({embeds: [embed], components: [row]}).then((mesaj) => {
+db.set(`buton_rol${mesaj.id}`, rol.id)
+})
+}
 exports.conf = {
   aliases: []
 };
